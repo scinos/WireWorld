@@ -140,6 +140,15 @@ if (!window.requestAnimationFrame) {
         this.cellMap.reset();
         this.render();
     }
+    Automata.prototype.load=function(pattern){
+        this.stop();
+        this.cellMap.load(pattern);
+        this.render();
+    }
+    Automata.prototype.save=function(){
+        this.stop();
+        return this.cellMap.save();
+    }
 
     Automata.prototype.draw=function(){
         if (this.isAnimating) {
@@ -162,52 +171,6 @@ if (!window.requestAnimationFrame) {
 function init(canvasId){
 
     var cellMap = new WireWorld.CellMap(160, 120, "blank");
-    //Line of cooper
-    for (var i = 0; i<100; i++) {
-        cellMap.setState(10+i,10,"copper");
-    }
-    cellMap.setState(13,10,"head");
-    cellMap.setState(12,10,"tail");
-
-    //Split signal
-    for (var i = 0; i<30; i++) {
-        cellMap.setState(10+i,20,"copper");
-    }
-    for (var i = 30; i<100; i++) {
-        cellMap.setState(10+i,21,"copper");
-    }
-    for (var i = 30; i<100; i++) {
-        cellMap.setState(10+i,19,"copper");
-    }
-    cellMap.setState(13,20,"head");
-    cellMap.setState(12,20,"tail");
-
-
-    //Diodo OK
-    for (var i = 0; i<100; i++) {
-        cellMap.setState(10+i,30,"copper");
-    }
-    cellMap.setState(40,29,"copper");
-    cellMap.setState(40,31,"copper");
-    cellMap.setState(39,29,"copper");
-    cellMap.setState(39,31,"copper");
-    cellMap.setState(40,30,"blank");
-
-    cellMap.setState(13,30,"head");
-    cellMap.setState(12,30,"tail");
-
-
-    for (var i = 0; i<100; i++) {
-        cellMap.setState(10+i,35,"copper");
-    }
-    cellMap.setState(40,34,"copper");
-    cellMap.setState(40,36,"copper");
-    cellMap.setState(39,34,"copper");
-    cellMap.setState(39,36,"copper");
-    cellMap.setState(39,35,"blank");
-    cellMap.setState(13,35,"head");
-    cellMap.setState(12,35,"tail");
-
 
     var automata = new Automata({
         grid: new WireWorld.Grid({
@@ -241,8 +204,15 @@ function init(canvasId){
         automata.reset();
     };
 
+    document.getElementById("saveBtn").onclick=function() {
+        document.getElementById("pattern").value = WireWorld.MCell.encode(automata.save(), 160, 120);
+    };
+    document.getElementById("loadBtn").onclick=function() {
+        automata.load(WireWorld.MCell.decode(document.getElementById("pattern").value));
+    };
+
+    automata.load(WireWorld.MCell.decode("#MCell 4.00\n#GAME Wireworld\n#BOARD 160x120\n#L $$2.CTH18C6.TH21.14C$28.C2.C20.C13.C$12.11C6.2C.21C12.12C$2.CTH7C40.C13.C$12.11C29.14C$$11.2C15.3C$2.CTH6C.11C4.C3.T$11.2C14.H3.H20.14C$27.T3.C20.C13.C$11.2C15.3C.21C12.12C$2.CTH7C.10C29.C13.C$11.2C39.C2.11C$$$2.3C2.4C2.3C.C.4C4.4C.C4.4C.4C.C2.C9.4C.4C$2.C2.C.C2.C.C4.C.C7.C4.C4.C2.C.C4.C.C10.C2.C.C2.C$2.3C2.4C2.2C2.C.C7.C4.C4.C2.C.C4.2C11.C2.C.4C$2.C2.C.C2.C4.C.C.C7.C4.C4.C2.C.C4.C.C10.C2.C.C.C$2.3C2.C2.C.3C2.C.4C4.4C.4C.4C.4C.C2.C9.4C.C2.C$$$$3.TH$2.C2.C$3.2C6.6C10.6C$5.C5.C5.C9.C5.C9.C2.C.4C.4C$5.C5.C4.4C7.C4.4C7.C2.C.C2.C.C2.C$5.7C4.C2.9C4.C2.6C3.2C2.C2.C.4C$5.C5.C4.4C7.C4.4C7.C2.C.C2.C.C.C$5.C5.C5.C9.C5.C9.C2.C.4C.C2.C$5.C5.2C2.2C10.6C$5.C$5.C$5.C$5.C$5.C$5.C$5.C45.4C.C2.C.3C2.C2.C.4C.3C$5.C45.C2.C.C2.C.C2.C.2C.C.C2.C2.C$5.C12.3C4.3C9.12C2.4C.2C.C.C2.C.C.2C.C2.C2.C$5.C12.C9.C.C6.C13.C2.C.C.2C.C2.C.C2.C.C2.C2.C$5.C12.C8.11C13.C2.C.C2.C.3C2.C2.C.4C2.C$5.14C8.C2.C$18.C8.11C$18.C9.C8.C$18.10C9.12C2.4C.3C$51.C2.C.C2.C$51.C2.C.C2.C$51.C2.C.3C$51.C2.C.C.C$51.4C.C2.C$"))
+    document.getElementById("pattern").value = WireWorld.MCell.encode(automata.save(), 160, 120);
+
     return automata;
-
-
-
 }
