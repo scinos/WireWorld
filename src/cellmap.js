@@ -10,7 +10,7 @@ ns("WireWorld");
  * @param defaultState {String} State to use as default for all cells
  * @constructor
  */
-WireWorld.CellMap = function(w, h, defaultState){
+WireWorld.CellMap = function (w, h, defaultState) {
     //This class stores the two-dimensional array into a one-dimension array to avoid nested
     //loops. The math involved is:
     //  2d(x,y)  --> 1d( x*D + y)
@@ -39,9 +39,9 @@ WireWorld.CellMap = function(w, h, defaultState){
  */
 WireWorld.CellMap.prototype.reset = function () {
     //Populate the array with the initial set of cells with the default state
-    for (var i = 0, len = this.w*this.h; i<len; i++) {
-        this.cells[i]= {
-            state: this.defaultState
+    for (var i = 0, len = this.w * this.h; i < len; i++) {
+        this.cells[i] = {
+            state:this.defaultState
         };
     }
 }
@@ -56,8 +56,8 @@ WireWorld.CellMap.prototype.reset = function () {
 WireWorld.CellMap.prototype.setState = function (x, y, state) {
     // As cells are stored in a single-dimension array, we need
     // a little math to get the right index.
-    this.cells[ x + y*this.w].state=state;
-    this.cells[ x + y*this.w].nextState=state;
+    this.cells[ x + y * this.w].state = state;
+    this.cells[ x + y * this.w].nextState = state;
 }
 
 /**
@@ -71,7 +71,6 @@ WireWorld.CellMap.prototype.getNeighbors = function (x,y) {
     //This function has been heavy optimized, decreasing legibility in the process.
     //   - Avoid function calls -> duplicated code
     //   - Short-circuit incrementer (++states[state]||(states[state]=1);) -> brain cruhser but pretty fast
-    //   - Auto-generated if statements using a macro, safer against bugs but difficult to read.
 
     var w = this.w,               //Shortcut to Cellmap's weigth
         h = this.h,               //Shortcut to Cellmap's height
@@ -79,55 +78,89 @@ WireWorld.CellMap.prototype.getNeighbors = function (x,y) {
         states= {},               //Hashmap with state=>count pairs
         state;                    //Aux variable to hold state
 
-    //Top-left neighbor
-    if (x-1 >= 0 && x-1 <= w &&  y-1 >= 0 && y-1 <= h) { state = cells[ (x-1)*w + (y-1) ].state; ++states[state]||(states[state]=1); }
+    //Top-left neighbor (x-1, y-1)
+    if (x - 1 >= 0 && x - 1 <= w && y - 1 >= 0 && y - 1 <= h) {
+        state = cells[ (x - 1) * w + (y - 1) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Top neighbor
-    if (x   >= 0 && x   <= w &&  y-1 >= 0 && y-1 <= h) { state = cells[ (x  )*w + (y-1) ].state; ++states[state]||(states[state]=1); }
+    //Top neighbor  (x, y-1)
+    if (x >= 0 && x <= w && y - 1 >= 0 && y - 1 <= h) {
+        state = cells[ (x  ) * w + (y - 1) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Top-right neighbor
-    if (x+1 >= 0 && x+1 <= w &&  y-1 >= 0 && y-1 <= h) { state = cells[ (x+1)*w + (y-1) ].state; ++states[state]||(states[state]=1); }
+    //Top-right neighbor (x+1, y-1)
+    if (x + 1 >= 0 && x + 1 <= w && y - 1 >= 0 && y - 1 <= h) {
+        state = cells[ (x + 1) * w + (y - 1) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Left neighbor
-    if (x-1 >= 0 && x-1 <= w &&  y   >= 0 && y   <= h) { state = cells[ (x-1)*w + (y  ) ].state; ++states[state]||(states[state]=1); }
+    //Left neighbor (x-1, y)
+    if (x - 1 >= 0 && x - 1 <= w && y >= 0 && y <= h) {
+        state = cells[ (x - 1) * w + (y  ) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Right neighbor
-    if (x+1 >= 0 && x+1 <= w &&  y   >= 0 && y   <= h) { state = cells[ (x+1)*w + (y  ) ].state; ++states[state]||(states[state]=1); }
+    //Right neighbor (x+1, y)
+    if (x + 1 >= 0 && x + 1 <= w && y >= 0 && y <= h) {
+        state = cells[ (x + 1) * w + (y  ) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Bottom-right neighbor
-    if (x-1 >= 0 && x-1 <= w &&  y+1 >= 0 && y+1 <= h) { state = cells[ (x-1)*w + (y+1) ].state; ++states[state]||(states[state]=1); }
+    //Bottom-right neighbor (x-1, y+1)
+    if (x - 1 >= 0 && x - 1 <= w && y + 1 >= 0 && y + 1 <= h) {
+        state = cells[ (x - 1) * w + (y + 1) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Bottom neighbor
-    if (x   >= 0 && x   <= w &&  y+1 >= 0 && y+1 <= h) { state = cells[ (x  )*w + (y+1) ].state; ++states[state]||(states[state]=1); }
+    //Bottom neighbor (x, y+1)
+    if (x >= 0 && x <= w && y + 1 >= 0 && y + 1 <= h) {
+        state = cells[ (x  ) * w + (y + 1) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-    //Bottom-left neighbor
-    if (x+1 >= 0 && x+1 <= w &&  y+1 >= 0 && y+1 <= h) { state = cells[ (x+1)*w + (y+1) ].state; ++states[state]||(states[state]=1); }
+    //Bottom-left neighbor (x+1, y+1)
+    if (x + 1 >= 0 && x + 1 <= w && y + 1 >= 0 && y + 1 <= h) {
+        state = cells[ (x + 1) * w + (y + 1) ].state;
+        ++states[state] || (states[state] = 1);
+    }
 
-
-    //States looks like:
-    // {   "myState1": 0,
-    //     "myState2": 3,
+    //states looks like:
+    // {   "myState1": 0,     //0 cells have myState1
+    //     "myState2": 3,     //3 cells have myState2
     //     ...
     // }
     return states;
 }
 
+/**
+ * Returns the CellMap content in a simplified version of RLE
+ * (http://psoup.math.wisc.edu/mcell/ca_files_formats.html#RLE)
+ *
+ * The format is:
+ *    - . means blank (aka dead) cell
+ *    - C, H and T stands for 'copper', 'head' and 'tail'
+ *
+ * @return {String}
+ */
 WireWorld.CellMap.prototype.save = function() {
     var output = "";
     for (var i = 0, len = this.w*this.h; i<len; i++) {
         var cell = this.cells[i];
+
+        //Add the character matching the cell state
         switch (cell.state) {
-            case "blank": output += "."; break;
+            case "blank":  output += "."; break;
             case "copper": output += "C"; break;
-            case "head": output += "H"; break;
-            case "tail": output += "T"; break;
-        }
-        if ( i%this.w == this.w-1 ) {
-            output+="$";
+            case "head":   output += "H"; break;
+            case "tail":   output += "T"; break;
         }
     }
 
+    return output;
 
+    /*
     function compress(prefix){
         return function(match) {
             return match.length + prefix;
@@ -141,32 +174,38 @@ WireWorld.CellMap.prototype.save = function() {
         replace(/T+/g, compress("T"));
 
     return output;
+    */
 }
 
+/**
+ * Loads the CellMap content from a simplified version of RLE
+ * (http://psoup.math.wisc.edu/mcell/ca_files_formats.html#RLE)
+ *
+ * The format is:
+ *    - . means blank (aka dead) cell
+ *    - C, H and T stands for 'copper', 'head' and 'tail'
+ *    - $ means new line
+ *
+ * @param input {string} CellMap data in simplified RLE format
+ */
 WireWorld.CellMap.prototype.load = function(input) {
+    //Clear current state
     this.reset();
 
-    function expand(prefix){
-        return function(match, group) {
-            return Array(+group + 1).join(prefix);
-        };
-    }
-
-    input = input.
-        replace(/(\d+)\./g,expand(".")).
-        replace(/(\d+)H/g, expand("H")).
-        replace(/(\d+)C/g, expand("C")).
-        replace(/(\d+)T/g, expand("T")).
-        replace(/\$/g,"");
-
+    //Loop all over the input
     for (var i = 0, len = input.length; i<len; i++) {
         var ch = input[i];
+
+        //Skip new-line characters
+        if (ch == "$") continue;
+
+        //Select the right state based on the character from this iteration
+        var cell = this.cells[i];
         switch (ch) {
-            case ".": this.cells[i].state="blank"; break;
-            case "H": this.cells[i].state="head"; break;
-            case "C": this.cells[i].state="copper"; break;
-            case "T": this.cells[i].state="tail"; break;
+            case ".": cell.state="blank"; break;
+            case "H": cell.state="head"; break;
+            case "C": cell.state="copper"; break;
+            case "T": cell.state="tail"; break;
         }
     }
-
 }
