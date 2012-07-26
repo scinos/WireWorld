@@ -79,49 +79,49 @@ WireWorld.CellMap.prototype.getNeighbors = function (x,y) {
         state;                    //Aux variable to hold state
 
     //Top-left neighbor (x-1, y-1)
-    if (x - 1 >= 0 && x - 1 <= w && y - 1 >= 0 && y - 1 <= h) {
+    if (x - 1 >= 0 && x - 1 <= h && y - 1 >= 0 && y - 1 <= w) {
         state = cells[ (x - 1) * w + (y - 1) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Top neighbor  (x, y-1)
-    if (x >= 0 && x <= w && y - 1 >= 0 && y - 1 <= h) {
+    if (x >= 0 && x <= h && y - 1 >= 0 && y - 1 <= w) {
         state = cells[ (x  ) * w + (y - 1) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Top-right neighbor (x+1, y-1)
-    if (x + 1 >= 0 && x + 1 <= w && y - 1 >= 0 && y - 1 <= h) {
+    if (x + 1 >= 0 && x + 1 <= h && y - 1 >= 0 && y - 1 <= w) {
         state = cells[ (x + 1) * w + (y - 1) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Left neighbor (x-1, y)
-    if (x - 1 >= 0 && x - 1 <= w && y >= 0 && y <= h) {
+    if (x - 1 >= 0 && x - 1 <= h && y >= 0 && y <= w) {
         state = cells[ (x - 1) * w + (y  ) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Right neighbor (x+1, y)
-    if (x + 1 >= 0 && x + 1 <= w && y >= 0 && y <= h) {
+    if (x + 1 >= 0 && x + 1 <= h && y >= 0 && y <= w) {
         state = cells[ (x + 1) * w + (y  ) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Bottom-right neighbor (x-1, y+1)
-    if (x - 1 >= 0 && x - 1 <= w && y + 1 >= 0 && y + 1 <= h) {
+    if (x - 1 >= 0 && x - 1 <= h && y + 1 >= 0 && y + 1 <= w) {
         state = cells[ (x - 1) * w + (y + 1) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Bottom neighbor (x, y+1)
-    if (x >= 0 && x <= w && y + 1 >= 0 && y + 1 <= h) {
+    if (x >= 0 && x <= h && y + 1 >= 0 && y + 1 <= w) {
         state = cells[ (x  ) * w + (y + 1) ].state;
         ++states[state] || (states[state] = 1);
     }
 
     //Bottom-left neighbor (x+1, y+1)
-    if (x + 1 >= 0 && x + 1 <= w && y + 1 >= 0 && y + 1 <= h) {
+    if (x + 1 >= 0 && x + 1 <= h && y + 1 >= 0 && y + 1 <= w) {
         state = cells[ (x + 1) * w + (y + 1) ].state;
         ++states[state] || (states[state] = 1);
     }
@@ -159,22 +159,6 @@ WireWorld.CellMap.prototype.save = function() {
     }
 
     return output;
-
-    /*
-    function compress(prefix){
-        return function(match) {
-            return match.length + prefix;
-        };
-    }
-
-    output = output.
-        replace(/\.+/g, compress(".")).
-        replace(/C+/g, compress("C")).
-        replace(/H+/g, compress("H")).
-        replace(/T+/g, compress("T"));
-
-    return output;
-    */
 }
 
 /**
@@ -209,3 +193,10 @@ WireWorld.CellMap.prototype.load = function(input) {
         }
     }
 }
+
+/*
+    #MCell 4.00
+#GAME Wireworld
+#BOARD 160x120
+#L 49.87C$46.C.C87.C$45.4C5.47C9.25C2.C$46.C.C4.C47.C7.27C2.C$45.2C.2C3.C5.40C3.C5.C27.C2.C$44.C.3C.C2.C4.C40.C3.C3.C.27C.C2.C$41.C.C7.C.C4.C5.25C11.C3.C.33C2.C$40.4C6.4C4.C4.C25.C11.C3.C33.C2.C$41.C.C7.C.C4.C4.C5.18C2.C12.C3.33C3.C$40.2C.2C5.2C.2C3.C4.C4.C18.C.C11.C.C3.C.27C.C3.C.C$39.C.3C.C3.C.3C.C2.C4.C4.C5.11C2.C.C10.2C.2C3.C27.C3.2C.2C$36.C.C7.C.C7.C.C4.C4.C4.C11.C.C.C9.C.C.C.C3.27C3.C.C.C.C$35.4C6.4C6.4C4.C4.C4.C5.4C2.C.C.C8.C.2C.2C.C3.25C3.C.2C.2C.C$36.C.C7.C.C7.C.C4.C4.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$35.2C.2C5.2C.2C5.2C.2C3.C4.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$34.C.3C.C3.C.3C.C3.C.3C.C2.C4.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$31.C.C7.C.C7.C.C7.C.C4.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$30.5C5.4C6.4C6.4C4.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$31.C.C7.C.C7.C.C7.C.C4.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$30.2C.2C5.2C.2C5.2C.2C5.2C.2C3.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$29.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C2.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$26.C.C7.C.C7.C.C7.C.C7.C.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$25.5C5.4C6.5C5.4C6.5C3.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$26.C.C7.C.C7.C.C7.C.C7.C.C4.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$25.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C3.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$24.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C2.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$21.C.C7.C.C7.C.C7.C.C7.C.C7.C.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$20.4C6.4C6.4C6.5C5.4C6.5C3.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$21.C.C7.C.C7.C.C7.C.C7.C.C7.C.C4.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$20.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C3.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$19.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C2.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$16.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$15.4C6.5C5.4C6.4C6.5C5.4C6.4C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$16.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C4.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$15.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C3.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$14.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C2.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$11.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C2.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$10.4C6.4C6.4C6.4C6.4C6.5C5.4C6.C2.C.C.C.C7.2C.2C.2C.2C29.2C.2C.2C.2C$11.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C2.C.C.C.C8.C.2C.2C.C3.25C3.C.2C.2C.C$10.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.C2.C.C.C.C9.C.C.C.C3.27C3.C.C.C.C$9.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C4.C2.C.C.C.C10.C.C.C3.C27.C3.C.C.C$6.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C2.C.C.C.C11.3C3.C.27C.C3.3C$5.4C6.4C6.5C5.4C6.5C5.4C6.4C6.C4.C2.C.C.C.C16.33C$6.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C2.C.C.C2.16C33.C$5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.C4.C2.C.C.C18.33C$4.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C4.C4.C2.C.C.C13.3C3.C.27C.C3.3C$.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C4.C2.C.C.C12.C.C.C3.C27.C3.C.C.C$4C6.5C5.5C5.4C6.5C5.4C6.4C6.C4.C4.C2.C.C.C11.C.C.C.C3.27C3.C.C.C.C$.C.C7.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C4.C2.C.C.C10.C.2C.2C.C3.25C3.C.2C.2C.C$2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$6.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$5.4C6.5C5.4C6.5C5.5C5.4C6.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$6.C.C7.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$6.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$11.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$10.4C6.5C5.4C6.4C6.4C6.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$11.C.C7.C.C7.C.C7.C.C7.C.C6.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$10.2C.2C5.2C.2C5.2C.2C5.2C.2C5.2C.2C5.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$11.3C.C3.C.3C.C3.C.3C.C3.C.3C.C3.C.3C.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$16.C.C7.C.C7.C.C7.C.C6.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$15.5C5.5C5.4C6.4C6.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$16.C.C7.C.C7.C.C7.C.C6.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$15.2C.2C5.2C.2C5.2C.2C5.2C.2C5.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$16.3C.C3.C.3C.C3.C.3C.C3.C.3C.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$21.C.C7.C.C7.C.C6.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$20.4C6.5C5.5C5.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$21.C.C7.C.C7.C.C6.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$20.2C.2C5.2C.2C5.2C.2C5.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$21.3C.C3.C.3C.C3.C.3C.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$26.C.C7.C.C6.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$25.4C6.4C6.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$26.C.C7.C.C6.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C9.2C.2C.2C.2C29.2C.2C.2C.2C$25.2C.2C5.2C.2C5.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C10.C.2C.2C.C3.25C3.C.2C.2C.C$26.3C.C3.C.3C.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C11.C.C.C.C3.27C3.C.C.C.C$3.CTH25.C.C6.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C12.2C.2C3.C27.C3.2C.2C$2.C3.C23.4C6.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C13.C.C3.C.27C.C3.C.C$2.C3.C24.C.C6.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C14.C3.33C3.C$2.C3.C23.2C.2C5.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C14.C2.C33.C2.C$3.HTC25.3C.C4.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C14.C.C.33C2.C$2.C32.C4.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C.C14.C.C2.C.27C.C2.C$2.C32.C4.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C2.14C3.C2.C27.C2.C$2.C32.C4.C4.C4.C4.C4.C4.C4.C4.C4.C2.C.C20.C2.27C2.C$2.C32.C4.C4.C4.C4.C4.C4.C4.C4.C4.C2.C2.20C4.25C2.C$2.C80.C52.C$2.79C3.52C$
+    */
