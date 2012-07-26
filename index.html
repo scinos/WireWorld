@@ -1,0 +1,125 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>Test</title>
+        <script type="text/javascript" src="init.js"></script>
+        <script type="text/javascript" src="src/grid.js"></script>
+        <script type="text/javascript" src="src/brushes.js"></script>
+        <script type="text/javascript" src="src/cellmap.js"></script>
+        <style>
+
+            #cnv {
+                margin-top: 5px;
+                cursor: pointer;
+            }
+            #cnv:active {
+                cursor: pointer;
+            }
+
+            canvas#cursor {
+                background-color: transparent;
+                cursor: pointer;
+            }
+            canvas#cursor:active {
+                cursor: pointer;
+            }
+
+            #brushes {
+                border: 1px solid black;
+                background-color: #ddd;
+                display: inline-block;
+                vertical-align:top;
+                padding: 15px;
+            }
+            .brush {
+                display:inline-block;
+                width: 25px;
+                height: 23px;
+                border: 1px solid black;
+                margin: 5px;
+            }
+            .copper {
+                background-color: #804C00;
+            }
+            .head {
+                background-color: red;
+            }
+            .tail {
+                background-color: yellow;
+            }
+            .blank {
+                background-color: black;
+            }
+
+
+            #buttons {
+                border: 1px solid black;
+                background-color: #ddd;
+                display: inline-block;
+                vertical-align:top;
+                padding: 15px;
+            }
+            #buttons BUTTON {
+                border: 1px solid black;
+                background-color: white;
+                width: 80px;
+                display: inline-block;
+                height: 30px;
+                margin: 5px;
+            }
+
+            FORM {
+                border: 1px solid black;
+                background-color: #ddd;
+                display: inline-block;
+                vertical-align: top;
+                padding: 19px;
+                padding-top: 25px;
+                padding-bottom: 23px;
+                font-size: 11pt;
+                font-family: Arial;
+            }
+
+            FORM INPUT {
+                padding: 0px;
+                margin: 0px;
+                height: 15pt;
+            }
+
+
+        </style>
+    </head>
+
+    <script>
+        function start() {
+            window.aut = init('cnv');
+        }
+
+    </script>
+    <body onload="start()">
+
+        <div id="buttons">
+            <button id="start">Start</button>
+            <button id="stop">Stop</button>
+            <button id="ff">&gt;|</button>
+            <button id="reset">Reset</button>
+        </div>
+
+        <div id="brushes">
+            <div id="copperBrush" data-brush="copper" class="brush copper"></div>
+            <div id="headBrush"   data-brush="head"   class="brush head"></div>
+            <div id="tailBrush"   data-brush="tail"   class="brush tail"></div>
+            <div id="blankBrush"  data-brush="blank"  class="brush blank"></div>
+        </div>
+
+        <form>
+            1 <input id="zoom"  type="range" max="30" min="1" value="10" step="1"/> 30
+        </form>
+        <br/>
+
+        <canvas id="cnv" width="805" height="605"></canvas>
+        <canvas id="cursor" width="100" height="60"></canvas>
+    </body>
+</html>
+
