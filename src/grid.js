@@ -6,7 +6,7 @@ WireWorld.Grid= function (obj){
     this.canvas = document.getElementById(obj.canvasId);
     this.range = document.getElementById(obj.rangeId);
     this.ctx = this.canvas.getContext("2d");
-    this.callback=obj.callback;
+    this.callback = obj.callback;
 
     /**
      * Reference to the last clicked cell
@@ -14,35 +14,35 @@ WireWorld.Grid= function (obj){
      */
     this.lastCell={};
     var that = this;
-    this.canvas.addEventListener('mousedown', function mousedown(ev){
-        that.lastCell.x=Math.floor(ev.offsetX / that.cellSize);
-        that.lastCell.y=Math.floor(ev.offsetY / that.cellSize);
-        that.isDragging=true;
+    this.canvas.addEventListener('mousedown', function mousedown(ev) {
+        that.lastCell.x = Math.floor(ev.offsetX / that.cellSize);
+        that.lastCell.y = Math.floor(ev.offsetY / that.cellSize);
+        that.isDragging = true;
         that.notify();
 
         ev.preventDefault();
     });
-    this.canvas.addEventListener('mouseup', function(ev){
-        that.isDragging=false;
+    this.canvas.addEventListener('mouseup', function (ev) {
+        that.isDragging = false;
         ev.preventDefault();
     });
-    this.canvas.addEventListener('mousemove', function(ev){
+    this.canvas.addEventListener('mousemove', function (ev) {
         if (!that.isDragging) return;
 
         var x = Math.floor(ev.offsetX / that.cellSize);
         var y = Math.floor(ev.offsetY / that.cellSize);
 
         if (x !== that.lastCell.x || y !== that.lastCell.y) {
-            that.lastCell.x=x;
-            that.lastCell.y=y;
+            that.lastCell.x = x;
+            that.lastCell.y = y;
             that.notify();
         }
 
         ev.preventDefault();
     });
 
-    this.range.addEventListener('change', function(){
-        that.cellSize=that.range.value;
+    this.range.addEventListener('change', function () {
+        that.cellSize = that.range.value;
         that.callback('zoom');
     });
 }
