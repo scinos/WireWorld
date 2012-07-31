@@ -2,127 +2,26 @@
 
 <html>
     <head>
-        <title>Test</title>
-        <script type="text/javascript" src="init.js"></script>
+        <title>WireWorld</title>
+
+        <!--Libs-->
+        <script type="text/javascript" src="lib/asevented.min.js"></script>
+
+        <!--Code-->
+        <script type="text/javascript" src="src/bootstrap.js"></script>
         <script type="text/javascript" src="src/grid.js"></script>
         <script type="text/javascript" src="src/brushes.js"></script>
         <script type="text/javascript" src="src/cellmap.js"></script>
+        <script type="text/javascript" src="src/automata.js"></script>
         <script type="text/javascript" src="src/MCell.js"></script>
-        <style>
 
-            #cnv {
-                margin-top: 5px;
-                cursor: pointer;
-            }
-            #cnv:active {
-                cursor: pointer;
-            }
+        <!--Init-->
+        <script type="text/javascript" src="init.js"></script>
 
-            canvas#cursor {
-                background-color: transparent;
-                cursor: pointer;
-            }
-            canvas#cursor:active {
-                cursor: pointer;
-            }
-
-            #brushes {
-                border: 1px solid black;
-                background-color: #ddd;
-                display: inline-block;
-                vertical-align:top;
-                padding: 15px;
-            }
-            .brush {
-                display:inline-block;
-                width: 25px;
-                height: 23px;
-                border: 1px solid black;
-                margin: 5px;
-            }
-            .copper {
-                background-color: #804C00;
-            }
-            .head {
-                background-color: red;
-            }
-            .tail {
-                background-color: yellow;
-            }
-            .blank {
-                background-color: black;
-            }
-
-
-            #buttons {
-                border: 1px solid black;
-                background-color: #ddd;
-                display: inline-block;
-                vertical-align:top;
-                padding: 15px;
-            }
-            #buttons BUTTON {
-                border: 1px solid black;
-                background-color: white;
-                width: 80px;
-                display: inline-block;
-                height: 30px;
-                margin: 5px;
-            }
-
-            #save {
-                border: 1px solid black;
-                background-color: #ddd;
-                display: inline-block;
-                vertical-align:top;
-                padding: 15px;
-            }
-            #save BUTTON {
-                border: 1px solid black;
-                background-color: white;
-                width: 80px;
-                display: inline-block;
-                height: 30px;
-                margin: 5px;
-            }
-            #save TEXTAREA {
-                border: 1px solid black;
-                background-color: white;
-                display:block;
-                clear:both;
-                width: 768px;
-            }
-
-            FORM {
-                border: 1px solid black;
-                background-color: #ddd;
-                display: inline-block;
-                vertical-align: top;
-                padding: 19px;
-                padding-top: 25px;
-                padding-bottom: 23px;
-                font-size: 11pt;
-                font-family: Arial;
-            }
-
-            FORM INPUT {
-                padding: 0px;
-                margin: 0px;
-                height: 15pt;
-            }
-
-
-        </style>
+        <link type="text/css" rel="stylesheet" href="css/style.css"/>
     </head>
 
-    <script>
-        function start() {
-            window.aut = init('cnv');
-        }
-
-    </script>
-    <body onload="start()">
-
+    <body onload="window.automata=initAutomata();">
         <div id="buttons">
             <button id="start">Start</button>
             <button id="stop">Stop</button>
@@ -137,13 +36,17 @@
             <div id="blankBrush"  data-brush="blank"  class="brush blank"></div>
         </div>
 
-        <form>
-            1 <input id="zoom"  type="range" max="30" min="1" value="10" step="1"/> 30
-        </form>
+        <div id="instructions">
+            <ul>
+                <li>Click &amp; drag: draw</li>
+                <li>Shift+Click &amp; drag: move</li>
+                <li>MosueWheel: zoom</li>
+            </ul>
+        </div>
 
         <br/>
 
-        <canvas id="cnv" width="805" height="605"></canvas>
+        <canvas id="cnv" width="800" height="600"></canvas>
 
         <br/>
 

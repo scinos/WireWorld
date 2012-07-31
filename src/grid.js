@@ -1,112 +1,129 @@
 ns("WireWorld");
 
 WireWorld.Grid= function (obj){
-    if (typeof obj != "object" || !obj) throw new Error("Config object not found");
-
-    this.canvas = document.getElementById(obj.canvasId);
-    this.range = document.getElementById(obj.rangeId);
-    this.ctx = this.canvas.getContext("2d");
-    this.callback = obj.callback;
-
     /**
      * Reference to the last clicked cell
      * @type {Object}
      */
     this.lastCell={};
-    var that = this;
-    this.canvas.addEventListener('mousedown', function mousedown(ev) {
-        that.lastCell.x = Math.floor(ev.offsetX / that.cellSize);
-        that.lastCell.y = Math.floor(ev.offsetY / that.cellSize);
-        that.isDragging = true;
-        that.notify();
 
+    //Capture some vars
+    var that = this;
+    var canvas  = document.getElementById(obj.canvasId);
+    this.bgColor = obj.bgColor;
+    this.gridColor = obj.gridColor;
+    this.cellSize = obj.cellSize;
+
+    //Compute height & width
+    this.ctx = canvas.getContext("2d");
+    this.height = canvas.height;
+    this.width = canvas.width;
+
+    //Zoom control
+    canvas.addEventListener('mousewheel', function mousewheel(ev) {
+        if (ev.wheelDelta > 0) {
+            that.viewportZoom = Math.min ( Math.max(0.20, that.viewportZoom + 0.10), 4);
+        } else {
+            that.viewportZoom = Math.min ( Math.max(0.20, that.viewportZoom - 0.10), 4);
+        }
+        that.trigger("zoom", that.viewportZoom);
+    });
+
+    //Click controls
+    canvas.addEventListener('mousedown', function mousedown(ev) {
+        that.isDragging = true;
+
+        if (ev.shiftKey) {
+            that.lastCell.x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
+            that.lastCell.y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+        } else {
+            that.lastCell.x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
+            that.lastCell.y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+            this.trigger("draw", this.lastCell);
+        }
         ev.preventDefault();
     });
-    this.canvas.addEventListener('mouseup', function (ev) {
+    canvas.addEventListener('mouseup', function (ev) {
         that.isDragging = false;
         ev.preventDefault();
     });
-    this.canvas.addEventListener('mousemove', function (ev) {
+    canvas.addEventListener('mousemove', function (ev) {
         if (!that.isDragging) return;
 
-        var x = Math.floor(ev.offsetX / that.cellSize);
-        var y = Math.floor(ev.offsetY / that.cellSize);
+        if (ev.shiftKey) {
+            var x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
+            var y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
 
-        if (x !== that.lastCell.x || y !== that.lastCell.y) {
-            that.lastCell.x = x;
-            that.lastCell.y = y;
-            that.notify();
+            var deltaX = that.lastCell.x-x;
+            var deltaY = that.lastCell.y-y;
+
+            if ( deltaX || deltaY) {
+                that.lastCell.x = x;
+                that.lastCell.y = y;
+                that.trigger("move", that.viewportStart.x + deltaX, that.viewportStart.y + deltaY);
+            }
+
+        } else {
+            var x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
+            var y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+            if (x !== that.lastCell.x || y !== that.lastCell.y) {
+                that.lastCell.x = x;
+                that.lastCell.y = y;
+            }
+            this.trigger("draw", this.lastCell);
         }
 
         ev.preventDefault();
     });
-
-    this.range.addEventListener('change', function () {
-        that.cellSize = that.range.value;
-        that.callback('zoom');
-    });
 }
 
-WireWorld.Grid.prototype.bgColor = "rgba(0, 0, 0, 1)";
-WireWorld.Grid.prototype.gridColor = "rgba(128, 128, 128, 0.5)";
-WireWorld.Grid.prototype.cellSize = 10;
-WireWorld.Grid.prototype.width = 805;
-WireWorld.Grid.prototype.height = 605;
-
-WireWorld.Grid.prototype.renderGrid = function() {
-    if (this.cellSize == 1) {
-        return;
-    }
-    //Compute some vars
-    var height = this.height;
-    var width = this.width;
-
-    //Render background
+WireWorld.Grid.prototype.renderBackground = function() {
     this.ctx.fillStyle = this.bgColor;
-    this.ctx.fillRect(0,0, width, height);
-
-    //Render grid
-    var step = this.cellSize;
-    var XSteps = Math.floor(width/step);
-    var YSteps = Math.floor(height/step);
-    this.ctx.fillStyle = this.gridColor;
-    for (var i = 0, len=XSteps; i<len; i++) {
-        var pos = i *step;
-        this.ctx.fillRect(pos, 0, 1, height);
-    }
-    for (var i = 0, len=YSteps; i<len; i++) {
-        var pos = i *step;
-        this.ctx.fillRect(0, pos, width,1);
-    }
+    this.ctx.fillRect(0,0, this.width, this.height);
 }
+WireWorld.Grid.prototype.renderCells = function(){
+    var step = this.cellSize * this.viewportZoom;
+    var cellWidth = Math.floor(this.width / step);
+    var cellHeight = Math.floor(this.height / step);
+    var start = this.viewportStart;
+    var cells = this.cells;
 
-WireWorld.Grid.prototype.renderCells = function(cells){
+    this.ctx.strokeStyle=this.gridColor;
     for (var i = 0, len=cells.length; i<len; i++) {
-        this.renderCell(cells[i]);
+        var cell = cells[i];
+
+        if (cell.x >= start.x && cell.x <= (start.x+cellWidth) &&
+            cell.y >= start.y && cell.y <= (start.y+cellHeight)
+            ) {
+
+            var x = step*(cell.x-start.x);
+            var y = step*(cell.y-start.y);
+            var w = step;
+            var h = step;
+
+            this.ctx.fillStyle=cell.color;
+            this.ctx.fillRect(x,y,w,h);
+            this.ctx.strokeRect(x,y,w,h);
+        }
     }
 }
-
-WireWorld.Grid.prototype.renderCell = function(cell) {
-    //+-1 is used to avoid overlap with the cell border
-
-    var correction = !!(this.cellSize > 1);
-
-    var color = cell.color;
-    var x = cell.x * this.cellSize + correction;
-    var y = cell.y * this.cellSize + correction;
-    var w = this.cellSize - correction;
-    var h = this.cellSize - correction;
-
-    this.ctx.fillStyle=color;
-    this.ctx.fillRect(x,y,w,h);
+WireWorld.Grid.prototype.update = function() {
+    this.renderBackground();
+    this.renderCells();
 }
 
-
-/**
- * Notify the map about a click event
- *
- * @todo very simple implementation, improve *
- */
-WireWorld.Grid.prototype.notify = function() {
-    this.callback("cell",this.lastCell);
+WireWorld.Grid.prototype.setZoom = function(zoom){
+    this.viewportZoom = zoom;
 }
+WireWorld.Grid.prototype.setStart = function(start){
+    this.viewportStart = start;
+}
+WireWorld.Grid.prototype.setCells = function(cells){
+    this.cells = cells;
+}
+WireWorld.Grid.prototype.setMax = function(max){
+    this.max = max;
+}
+
+//Attach event properties
+asEvented.call(WireWorld.Grid.prototype);
