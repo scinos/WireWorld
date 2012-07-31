@@ -39,7 +39,7 @@ WireWorld.Grid= function (obj){
         } else {
             that.lastCell.x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
             that.lastCell.y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
-            this.trigger("draw", this.lastCell);
+            that.trigger("draw", that.lastCell);
         }
         ev.preventDefault();
     });
@@ -69,8 +69,9 @@ WireWorld.Grid= function (obj){
             if (x !== that.lastCell.x || y !== that.lastCell.y) {
                 that.lastCell.x = x;
                 that.lastCell.y = y;
+                that.trigger("draw", that.lastCell);
             }
-            this.trigger("draw", this.lastCell);
+
         }
 
         ev.preventDefault();
