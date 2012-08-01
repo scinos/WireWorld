@@ -1,4 +1,5 @@
 WireWorld
 =========
 
-WireWorld implementation in JavaScript
+WireWorld implementation.
+Live version: http://wireworld-scinos.dotcloud.com/
