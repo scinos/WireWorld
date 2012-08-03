@@ -34,11 +34,11 @@ WireWorld.Grid= function (obj){
         that.isDragging = true;
 
         if (ev.shiftKey) {
-            that.lastCell.x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
-            that.lastCell.y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+            that.lastCell.x = Math.floor( (ev.clientX -  ev.target.offsetLeft) / that.cellSize / that.viewportZoom);
+            that.lastCell.y = Math.floor( (ev.clientY -  ev.target.offsetTop) / that.cellSize / that.viewportZoom);
         } else {
-            that.lastCell.x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
-            that.lastCell.y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+            that.lastCell.x = Math.floor( (ev.clientX -  ev.target.offsetLeft) / that.cellSize / that.viewportZoom);
+            that.lastCell.y = Math.floor( (ev.clientY -  ev.target.offsetTop) / that.cellSize / that.viewportZoom);
             that.trigger("draw", that.lastCell);
         }
         ev.preventDefault();
@@ -51,8 +51,8 @@ WireWorld.Grid= function (obj){
         if (!that.isDragging) return;
 
         if (ev.shiftKey) {
-            var x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
-            var y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+            var x = Math.floor( (ev.clientX -  ev.target.offsetLeft) / that.cellSize / that.viewportZoom);
+            var y = Math.floor( (ev.clientY -  ev.target.offsetTop) / that.cellSize / that.viewportZoom);
 
             var deltaX = that.lastCell.x-x;
             var deltaY = that.lastCell.y-y;
@@ -64,8 +64,8 @@ WireWorld.Grid= function (obj){
             }
 
         } else {
-            var x = Math.floor(ev.offsetX / that.cellSize / that.viewportZoom);
-            var y = Math.floor(ev.offsetY / that.cellSize / that.viewportZoom);
+            var x = Math.floor( (ev.clientX -  ev.target.offsetLeft) / that.cellSize / that.viewportZoom);
+            var y = Math.floor( (ev.clientY -  ev.target.offsetTop) / that.cellSize / that.viewportZoom);
             if (x !== that.lastCell.x || y !== that.lastCell.y) {
                 that.lastCell.x = x;
                 that.lastCell.y = y;
