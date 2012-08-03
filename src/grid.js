@@ -20,14 +20,18 @@ WireWorld.Grid= function (obj){
     this.width = canvas.width;
 
     //Zoom control
-    canvas.addEventListener('mousewheel', function mousewheel(ev) {
-        if (ev.wheelDelta > 0) {
+    function mousewheel(ev) {
+        var displacement = ("wheelDelta" in ev)?ev.wheelDelta:ev.detail;
+        if (displacement > 0) {
             that.viewportZoom = Math.min ( Math.max(0.20, that.viewportZoom + 0.10), 4);
         } else {
             that.viewportZoom = Math.min ( Math.max(0.20, that.viewportZoom - 0.10), 4);
         }
         that.trigger("zoom", that.viewportZoom);
-    });
+        ev.preventDefault();
+    }
+    canvas.addEventListener('mousewheel', mousewheel); //Webkit
+    canvas.addEventListener('DOMMouseScroll', mousewheel); //FF
 
     //Click controls
     canvas.addEventListener('mousedown', function mousedown(ev) {
