@@ -9,65 +9,22 @@ WireWorld.Automata = function(obj) {
     this.states = obj.states;
     this.cellMap = obj.initialState;
 
-    //Configure grid
-    this.grid.setStart({x:0, y:0});
-    this.grid.setZoom(1);
-    this.grid.setMax({
-        w: this.cellMap.w,
-        h: this.cellMap.h
-    });
-
-
     var that = this;
     this.grid.bind("draw", function(cell) {
         //Change cell state
-
         that.cellMap.setState(cell.x,cell.y, that.brushes.currentBrush || "copper");
 
         //Pass the cells to the grid
-        that.grid.setCells(that._getCells());
-
-        //Update the grid
-        that.grid.update();
-    });
-    this.grid.bind("move", function(x,y) {
-        that.grid.setStart({x:x, y:y});
-        that.grid.update();
-    });
-    this.grid.bind("zoom", function(zoom) {
-        that.grid.setZoom(zoom);
-        that.grid.update();
+        that.grid.updateCells(that.cellMap, that.states);
+        that.grid.refresh();
     });
 
-    this.draw.bind(this);
-}
-
-WireWorld.Automata.prototype._getCells = function() {
-    var cellMap= this.cellMap;
-    var w = cellMap.w;
-    var h = cellMap.h;
-    var currentCells = cellMap.cells;
-    var states = this.states;
-    var cells = [];
-
-    for (var i = 0, len = currentCells.length; i<len; i++) {
-        var x = i%w;
-        var y = (i-x)/w;
-        var cell = currentCells[i];
-
-        if (cell.nextState && cell.nextState!=cell.state){
-            cell.state=cell.nextState;
-            delete cell.nextState;
-        }
-
-        cells.push({ x: x, y: y, color: states[cell.state] });
-    }
-    return cells;
+    this.draw = this.draw.bind(this);
 }
 
 WireWorld.Automata.prototype.render = function() {
-    this.grid.setCells(this._getCells());
-    this.grid.update();
+    this.grid.updateCells(this.cellMap, this.states);
+    this.grid.refresh();
 }
 WireWorld.Automata.prototype.evolve = function() {
     // Rules
@@ -145,10 +102,6 @@ WireWorld.Automata.prototype.draw=function(){
         // Only draw if we are drawing
         this.evolve();
         this.render();
-
-        var automata = this;
-        requestAnimationFrame(function(){
-            automata.draw();
-        });
+        requestAnimationFrame(this.draw);
     }
 }

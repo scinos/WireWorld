@@ -1,9 +1,5 @@
-#cnv {
-    margin-top: 5px;
-    cursor: pointer;
-}
-#cnv:active {
-    cursor: pointer;
+BODY {
+    margin: 0px;
 }
 
 
@@ -89,3 +85,40 @@
     clear:both;
     width: 768px;
 }
+
+
+
+
+.automata {
+    display: block;
+    position: relative;
+    width: 800px;
+    height: 600px;
+}
+
+    .automata #cnv {
+        cursor: pointer;
+        background-color: transparent;
+        display: block;
+
+        position: absolute;
+        width: 800px;
+        height: 600px;
+    }
+    .automata #cnv:active {
+        cursor: pointer;
+    }
+
+    .automata .background {
+        background-color: black;
+        position: absolute;
+        width: 800px;
+        height: 600px;
+    }
+
+    .automata .grid{
+        background-color: transparent;
+        position: absolute;
+        width: 800px;
+        height: 600px;
+    }

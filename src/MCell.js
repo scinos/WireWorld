@@ -42,11 +42,14 @@ WireWorld.MCell.encode = function (input, w, h) {
     var result = [
         "#MCell 4.00",
         "#GAME Wireworld",
-        "#BOARD "+w+"x"+h,
-        "#L " + input
-    ].join("\n");
+        "#BOARD "+w+"x"+h
+    ];
 
-    return result;
+    for (var i = 0, len = input.length; i<=len; i+=64) {
+        result.push("#L "+ input.substr(i,64));
+    }
+
+    return result.join("\n");
 }
 
 WireWorld.MCell.decode = function (encodedString) {
@@ -56,8 +59,12 @@ WireWorld.MCell.decode = function (encodedString) {
     var height = sizes[2];
 
     //Extract pattern
-    var patternMatch = encodedString.match(/#L (.+)$/);
-    var pattern = patternMatch[1];
+    var re = /#L (.+)/g;
+    var result;
+    var pattern = "";
+    while(result = re.exec(encodedString)) {
+        pattern += result[1];
+    }
 
     function addMissingBlankLines() {
         //Add missing blank lines
@@ -99,3 +106,4 @@ WireWorld.MCell.decode = function (encodedString) {
 
     return pattern;
 }
+
